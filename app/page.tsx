@@ -16,6 +16,8 @@ export default async function Home() {
     description: q.description,
     type: q.type,
     options: q.options ? JSON.parse(q.options) : [],
+    required: q.required,
+    order: q.order,
   }));
 
   return (
