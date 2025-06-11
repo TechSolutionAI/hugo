@@ -142,7 +142,7 @@ const questions = [
 ];
 
 async function main() {
-    
+    await prisma.user.deleteMany();
     await prisma.question.deleteMany(); // Clear existing questions
     await prisma.question.createMany({
         data: questions
