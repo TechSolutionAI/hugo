@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Question } from "@/lib/types";
+import SurveyReview from "./survery-review";
 
 interface SurveyFormProps {
     questions: Question[]
@@ -10,6 +11,7 @@ interface SurveyFormProps {
 export default function SurveyForm({ questions } : SurveyFormProps) {
     const [errors, setErrors] = useState<{ [key: number]: string }>({});
     const [values, setValues] = useState<{ [key: number]: any }>({});
+    const [isSubmitted, setIsSubmitted] = useState(false);
 
     const handleChange = (index: number, value: any) => {
         setValues(prev => ({ ...prev, [index]: value }));
@@ -53,8 +55,16 @@ export default function SurveyForm({ questions } : SurveyFormProps) {
         if (validate()) {
             // Submit logic here
             alert("Form submitted! - " + JSON.stringify(values));
+
+            setIsSubmitted(true);
         }
     };
+
+    if (isSubmitted) {
+        return(
+            <SurveyReview questions={questions} values={values} />
+        )
+    }
 
     return (
         <div className="container mx-auto p-4">
@@ -128,7 +138,7 @@ export default function SurveyForm({ questions } : SurveyFormProps) {
                         )}
                     </div>
                 ))}
-                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
+                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer">
                     Submit
                 </button>
             </form>
