@@ -1,8 +1,23 @@
 import SurveyForm from "@/components/survey-form";
-import { questions } from "@/lib/mockdata";
 import { Question } from "@/lib/types";
 
-export default function Home() {
+export default async function Home() {
+
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/question`, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
+
+  const dbQuestions = await res.json();
+  const questions: Question[] = dbQuestions.map((q: any) => ({
+    id: q.id,
+    title: q.title,
+    description: q.description,
+    type: q.type,
+    options: q.options ? JSON.parse(q.options) : [],
+  }));
+
   return (
     <div className="container mx-auto p-4">
       <div className="justif  y-center items-center flex flex-col">
@@ -12,7 +27,7 @@ export default function Home() {
         </p>
       </div>
       <div>
-        <SurveyForm questions={questions as Question[]} />
+        <SurveyForm questions={questions} />
       </div>
     </div>
   );

@@ -50,13 +50,28 @@ export default function SurveyForm({ questions } : SurveyFormProps) {
         return Object.keys(newErrors).length === 0;
     };
 
-    const handleSubmit = (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (validate()) {
             // Submit logic here
-            alert("Form submitted! - " + JSON.stringify(values));
-
-            setIsSubmitted(true);
+            await fetch(`${process.env.NEXT_PUBLIC_API_URL || ""}/api/survey`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ response: values }),
+            })
+            .then(res => {
+                if (res.ok) {
+                    setIsSubmitted(true);
+                } else {
+                    // handle error if needed
+                }
+            })
+            .catch(() => {
+                // handle network error if needed
+            });
+            // setIsSubmitted(true);
         }
     };
 
@@ -138,7 +153,7 @@ export default function SurveyForm({ questions } : SurveyFormProps) {
                         )}
                     </div>
                 ))}
-                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded cursor-pointer">
+                <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded cursor">
                     Submit
                 </button>
             </form>
